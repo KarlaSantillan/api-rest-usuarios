@@ -1,0 +1,14 @@
+{
+  "name": "practica-3-api-usuarios",
+  "version": "1.0.0",
+  "description": "Sesion 1: base de API REST con Node.js y Express",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "node --watch src/app.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
