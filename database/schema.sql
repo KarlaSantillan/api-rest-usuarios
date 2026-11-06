@@ -12,12 +12,10 @@ CREATE TABLE IF NOT EXISTS usuarios (
   fecha_registro TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- Amplía la tabla original sin eliminar usuarios ni alterar sus datos.
 ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS carrera_id INTEGER;
 ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS semestre INTEGER;
 ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS fecha_registro TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP;
 
--- PostgreSQL no ofrece ADD CONSTRAINT IF NOT EXISTS.
 DO $$
 BEGIN
   IF NOT EXISTS (
