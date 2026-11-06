@@ -40,8 +40,9 @@ function validarUsuario(body) {
   return { datos: [nombre, correo, carrera_id, semestre] };
 }
 
-function listarUsuarios(req, res) {
-  return res.status(200).json(usuarios);
+async function listarUsuarios(req, res) {
+  const resultado = await pool.query(`SELECT ${CAMPOS} FROM usuarios ORDER BY id`);
+  return res.status(200).json(resultado.rows);
 }
 
 function obtenerUsuario(req, res) {
