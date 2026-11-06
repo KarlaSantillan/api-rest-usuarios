@@ -92,10 +92,15 @@ async function actualizarUsuario(req, res) {
   return res.status(200).json(resultado.rows[0]);
 }
 
-function pendienteBaseDatos(req, res) {
-  return res.status(501).json({
-    mensaje: 'Pendiente de implementacion de CRUD con PostgreSQL en sesion 2'
-  });
+async function eliminarUsuario(req, res) {
+  const id = leerId(req, res);
+  if (id === null) return;
+
+  const resultado = await pool.query('DELETE FROM usuarios WHERE id = $1 RETURNING id', [id]);
+  if (!resultado.rowCount) {
+    return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+  }
+  return res.status(200).json({ mensaje: 'Usuario eliminado', id: resultado.rows[0].id });
 }
 
-module.exports = { listarUsuarios, obtenerUsuario, crearUsuario, actualizarUsuario, pendienteBaseDatos };
+module.exports = { listarUsuarios, obtenerUsuario, crearUsuario, actualizarUsuario, eliminarUsuario };

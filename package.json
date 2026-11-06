@@ -1,11 +1,13 @@
 {
   "name": "practica-3-api-usuarios",
   "version": "1.0.0",
-  "description": "Sesion 1: base de API REST con Node.js y Express",
+  "description": "Sesion 2: API REST de usuarios con CRUD en PostgreSQL",
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",
-    "dev": "node --watch src/app.js"
+    "dev": "node --watch src/app.js",
+    "test:db": "node src/test-db.js",
+    "test:integration": "node --test tests/usuarios.integration.test.js"
   },
   "license": "MIT",
   "dependencies": {

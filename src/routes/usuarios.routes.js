@@ -6,6 +6,6 @@ router.get('/', usuariosController.listarUsuarios);
 router.get('/:id', usuariosController.obtenerUsuario);
 router.post('/', usuariosController.crearUsuario);
 router.put('/:id', usuariosController.actualizarUsuario);
-router.delete('/:id', usuariosController.pendienteBaseDatos);
+router.delete('/:id', usuariosController.eliminarUsuario);
 
 module.exports = router;
