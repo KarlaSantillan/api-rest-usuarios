@@ -3,12 +3,18 @@ const pool = require('../config/db');
 const CAMPOS = 'id, nombre, correo, carrera_id, semestre, fecha_registro';
 const MAX_ENTERO = 2147483647;
 
-const usuarios = [
-  { id: 1, nombre: 'Usuario de ejemplo', correo: 'ejemplo@correo.com' }
-];
-
 function esEnteroPositivo(valor) {
   return Number.isInteger(valor) && valor > 0 && valor <= MAX_ENTERO;
+}
+
+function leerId(req, res) {
+  const texto = req.params.id;
+  const id = Number(texto);
+  if (!/^[1-9]\d*$/.test(texto) || !esEnteroPositivo(id)) {
+    res.status(400).json({ mensaje: 'El ID debe ser un entero positivo válido' });
+    return null;
+  }
+  return id;
 }
 
 function validarUsuario(body) {
@@ -45,16 +51,15 @@ async function listarUsuarios(req, res) {
   return res.status(200).json(resultado.rows);
 }
 
-function obtenerUsuario(req, res) {
-  const id = Number(req.params.id);
-  if (!Number.isInteger(id) || id <= 0) {
-    return res.status(400).json({ mensaje: 'El ID debe ser un entero positivo' });
-  }
-  const usuario = usuarios.find((item) => item.id === id);
-  if (!usuario) {
+async function obtenerUsuario(req, res) {
+  const id = leerId(req, res);
+  if (id === null) return;
+
+  const resultado = await pool.query(`SELECT ${CAMPOS} FROM usuarios WHERE id = $1`, [id]);
+  if (!resultado.rowCount) {
     return res.status(404).json({ mensaje: 'Usuario no encontrado' });
   }
-  return res.status(200).json(usuario);
+  return res.status(200).json(resultado.rows[0]);
 }
 
 async function crearUsuario(req, res) {
