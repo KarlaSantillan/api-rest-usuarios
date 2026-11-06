@@ -75,10 +75,27 @@ async function crearUsuario(req, res) {
   return res.location(`/usuarios/${usuario.id}`).status(201).json(usuario);
 }
 
+async function actualizarUsuario(req, res) {
+  const id = leerId(req, res);
+  if (id === null) return;
+  const { error, datos } = validarUsuario(req.body);
+  if (error) return res.status(400).json({ mensaje: error });
+
+  const resultado = await pool.query(
+    `UPDATE usuarios SET nombre = $1, correo = $2, carrera_id = $3, semestre = $4
+     WHERE id = $5 RETURNING ${CAMPOS}`,
+    [...datos, id]
+  );
+  if (!resultado.rowCount) {
+    return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+  }
+  return res.status(200).json(resultado.rows[0]);
+}
+
 function pendienteBaseDatos(req, res) {
   return res.status(501).json({
     mensaje: 'Pendiente de implementacion de CRUD con PostgreSQL en sesion 2'
   });
 }
 
-module.exports = { listarUsuarios, obtenerUsuario, crearUsuario, pendienteBaseDatos };
+module.exports = { listarUsuarios, obtenerUsuario, crearUsuario, actualizarUsuario, pendienteBaseDatos };
