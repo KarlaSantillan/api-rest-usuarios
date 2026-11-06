@@ -48,6 +48,8 @@ En la sesión 2, reemplazar el almacenamiento temporal de `usuarios.controller.j
 
 La conexión con PostgreSQL está preparada para que Gabriel integre el CRUD. Las rutas y los controladores actuales siguen utilizando el arreglo de usuarios en memoria.
 
+En la base de datos, `usuarios` representa a los estudiantes. Cada estudiante puede pertenecer a una carrera mediante `carrera_id`; una carrera puede tener muchos estudiantes (relación **1:N**). `carrera_id` y `semestre` son opcionales, por lo que un estudiante puede registrarse solo con `nombre` y `correo`. `fecha_registro` se completa automáticamente. El `POST /usuarios` actual conserva su formato y todavía trabaja en memoria.
+
 1. Clonar el repositorio y entrar en la carpeta del proyecto:
 
    ```bash
@@ -76,7 +78,7 @@ La conexión con PostgreSQL está preparada para que Gabriel integre el CRUD. La
    psql -U postgres -d api_rest_usuarios -f database/schema.sql
    ```
 
-   El script crea `usuarios` con `id SERIAL PRIMARY KEY`, `nombre VARCHAR(100) NOT NULL` y `correo VARCHAR(150) NOT NULL UNIQUE`. Se puede repetir sin borrar datos ni fallar por una tabla existente.
+   El script crea `carreras` (`id` y `nombre` único) y `usuarios` (`id`, `nombre`, `correo` único, `carrera_id` como clave foránea opcional, `semestre` opcional y `fecha_registro`). Si `usuarios` ya existe con el modelo anterior, añade las columnas faltantes sin borrar registros; estos reciben como `fecha_registro` la fecha de la migración. Puede repetirse sin fallar por tablas, columnas o la clave foránea existentes.
 
 5. Opcionalmente, ejecutar `database/seed.sql` en la misma base desde **Query Tool** o desde la raíz del proyecto con:
 
@@ -84,7 +86,7 @@ La conexión con PostgreSQL está preparada para que Gabriel integre el CRUD. La
    psql -U postgres -d api_rest_usuarios -f database/seed.sql
    ```
 
-   Inserta a `Usuario de ejemplo` (`ejemplo@correo.com`) solo si ese correo aún no existe.
+   Inserta tres carreras ficticias y a `Estudiante de ejemplo` (`estudiante@correo.com`) en Ingeniería de Software, semestre 3. Si ya existen los nombres de las carreras o el correo del estudiante, no los duplica. Si existe el registro anterior `ejemplo@correo.com`, se conserva.
 
 6. Copiar `.env.example` como `.env` en la raíz del proyecto. Reemplazar `CAMBIAR_CONTRASENA` por la contraseña local de PostgreSQL y ajustar `DB_HOST`, `DB_PORT`, `DB_USER` y `DB_NAME` según la instalación. `.env` está excluido de Git y no debe subirse.
 
